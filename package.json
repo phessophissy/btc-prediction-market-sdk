@@ -1,0 +1,54 @@
+{
+  "name": "@phessophissy/btc-prediction-market-sdk",
+  "version": "1.1.0",
+  "description": "TypeScript SDK for Bitcoin Prediction Market",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "stacks",
+    "clarity",
+    "bitcoin",
+    "prediction-market",
+    "sdk"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phessophissy/btc-prediction-market-sdk.git"
+  },
+  "homepage": "https://github.com/phessophissy/btc-prediction-market-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/phessophissy/btc-prediction-market-sdk/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "phessophissy",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@stacks/network": "^6.13.0",
+    "@stacks/transactions": "^6.13.0",
+    "@stacks/wallet-sdk": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5",
+    "vitest": "^1.6.1"
+  }
+}
