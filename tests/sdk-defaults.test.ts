@@ -1,0 +1,16 @@
+import { describe, expect, it } from "vitest";
+import { MarketContractService, initializeMarketSDK } from "../src";
+
+describe("sdk defaults", () => {
+  it("targets the V3 contract by default", () => {
+    const service = new MarketContractService("SP123", true);
+
+    expect((service as any).contractName).toBe("btc-prediction-market-v3");
+  });
+
+  it("lets the factory override the contract name when needed", () => {
+    const service = initializeMarketSDK("SP123", false, "btc-prediction-market-v2");
+
+    expect((service as any).contractName).toBe("btc-prediction-market-v2");
+  });
+});
