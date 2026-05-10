@@ -63,6 +63,26 @@ describe("sdk V3 surface", () => {
     );
     expect(service.callContract).not.toHaveBeenCalled();
   });
+
+  it("rejects invalid withdrawal amounts before withdrawFees builds a tx", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.callContract = vi.fn();
+
+    await expect(service.withdrawFees(0, "SP2C2Q4JY1Q9W2D5J1X7A7M6D0A8TR3M6L5Z9P4M1", "sender-key")).rejects.toThrow(
+      "Amount must be a positive integer number of microSTX"
+    );
+    expect(service.callContract).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid withdrawal recipients before emergencyWithdraw builds a tx", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.callContract = vi.fn();
+
+    await expect(service.emergencyWithdraw(1000, "not-an-address", "sender-key")).rejects.toThrow(
+      "Stacks address must be a valid standard principal string"
+    );
+    expect(service.callContract).not.toHaveBeenCalled();
+  });
 });
 
 describe("sdk V3 decoders", () => {
