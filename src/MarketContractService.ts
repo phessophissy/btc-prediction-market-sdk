@@ -19,6 +19,7 @@ import {
 import {
   validateDescription,
   validateMarketId,
+  validateMicroStxAmount,
   validateSettlementHeight,
   validateStandardPrincipal,
   validateTitle,
@@ -387,6 +388,16 @@ export class MarketContractService {
     recipient: string,
     senderKey: string
   ): Promise<string> {
+    const amountValidation = validateMicroStxAmount(amountMicroStx);
+    if (!amountValidation.valid) {
+      throw new Error(amountValidation.error);
+    }
+
+    const recipientValidation = validateStandardPrincipal(recipient);
+    if (!recipientValidation.valid) {
+      throw new Error(recipientValidation.error);
+    }
+
     return this.callContract(
       'withdraw-fees',
       [
@@ -406,6 +417,16 @@ export class MarketContractService {
     recipient: string,
     senderKey: string
   ): Promise<string> {
+    const amountValidation = validateMicroStxAmount(amountMicroStx);
+    if (!amountValidation.valid) {
+      throw new Error(amountValidation.error);
+    }
+
+    const recipientValidation = validateStandardPrincipal(recipient);
+    if (!recipientValidation.valid) {
+      throw new Error(recipientValidation.error);
+    }
+
     return this.callContract(
       'emergency-withdraw',
       [
