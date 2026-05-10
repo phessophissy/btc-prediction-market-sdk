@@ -16,7 +16,12 @@ import {
   trueCV,
   uintCV,
 } from '@stacks/transactions';
-import { validateDescription, validateSettlementHeight, validateTitle } from './utils/validation-50';
+import {
+  validateDescription,
+  validateMarketId,
+  validateSettlementHeight,
+  validateTitle,
+} from './utils/validation-50';
 import { Market, UserPosition } from './types';
 
 type ContractArg = {
@@ -277,6 +282,11 @@ export class MarketContractService {
   }
 
   async getMarket(marketId: number): Promise<Market | null> {
+    const marketIdValidation = validateMarketId(marketId);
+    if (!marketIdValidation.valid) {
+      throw new Error(marketIdValidation.error);
+    }
+
     const response = await this.readContract('get-market', [
       { type: 'uint', value: marketId.toString() },
     ]);
@@ -293,6 +303,11 @@ export class MarketContractService {
     marketId: number,
     userAddress: string
   ): Promise<UserPosition | null> {
+    const marketIdValidation = validateMarketId(marketId);
+    if (!marketIdValidation.valid) {
+      throw new Error(marketIdValidation.error);
+    }
+
     const response = await this.readContract('get-user-position', [
       { type: 'uint', value: marketId.toString() },
       { type: 'principal', value: userAddress },
