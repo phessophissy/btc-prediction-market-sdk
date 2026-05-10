@@ -42,6 +42,14 @@ export function validateSettlementHeight(
   return { valid: true };
 }
 
+export function validateMarketId(marketId: number): ValidationResult {
+  if (!Number.isInteger(marketId) || marketId < 0) {
+    return { valid: false, error: 'Market ID must be a non-negative integer' };
+  }
+
+  return { valid: true };
+}
+
 export function validateBetAmount(amount: number, minBet = 10000): ValidationResult {
   if (!Number.isFinite(amount) || amount < minBet) {
     return { valid: false, error: `Bet amount must be at least ${minBet} microSTX` };
