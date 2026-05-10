@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { validateMarketId, validateStandardPrincipal } from "../src";
+import {
+  validateMarketId,
+  validateMicroStxAmount,
+  validateStandardPrincipal,
+} from "../src";
 
 describe("validation helpers", () => {
   it("accepts non-negative integer market ids", () => {
@@ -32,6 +36,26 @@ describe("validation helpers", () => {
     expect(validateStandardPrincipal("SP123.contract-name")).toEqual({
       valid: false,
       error: "Expected a standard Stacks address without a contract suffix",
+    });
+  });
+
+  it("accepts positive integer microstx amounts", () => {
+    expect(validateMicroStxAmount(1)).toEqual({ valid: true });
+    expect(validateMicroStxAmount(100_000)).toEqual({ valid: true });
+  });
+
+  it("rejects zero, negative, and fractional microstx amounts", () => {
+    expect(validateMicroStxAmount(0)).toEqual({
+      valid: false,
+      error: "Amount must be a positive integer number of microSTX",
+    });
+    expect(validateMicroStxAmount(-10)).toEqual({
+      valid: false,
+      error: "Amount must be a positive integer number of microSTX",
+    });
+    expect(validateMicroStxAmount(10.25)).toEqual({
+      valid: false,
+      error: "Amount must be a positive integer number of microSTX",
     });
   });
 });
