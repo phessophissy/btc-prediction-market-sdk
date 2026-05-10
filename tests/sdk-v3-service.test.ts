@@ -43,6 +43,26 @@ describe("sdk V3 surface", () => {
     );
     expect(service.readContract).not.toHaveBeenCalled();
   });
+
+  it("rejects invalid standard principals before getUserPosition performs a read", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.readContract = vi.fn();
+
+    await expect(service.getUserPosition(1, "SP123.contract")).rejects.toThrow(
+      "Expected a standard Stacks address without a contract suffix"
+    );
+    expect(service.readContract).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid ownership recipients before transferOwnership builds a tx", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.callContract = vi.fn();
+
+    await expect(service.transferOwnership(" ", "sender-key")).rejects.toThrow(
+      "Stacks address is required"
+    );
+    expect(service.callContract).not.toHaveBeenCalled();
+  });
 });
 
 describe("sdk V3 decoders", () => {
