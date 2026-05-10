@@ -25,6 +25,16 @@ const marketCount = await sdk.getMarketCount();
 const marketZero = await sdk.getMarket(0);
 ```
 
+## Instance Metadata Helpers
+
+```ts
+sdk.getContractAddress();
+sdk.getContractName();
+sdk.getContractIdentifier();
+sdk.getNetworkMode();
+sdk.getMarketCreationFeeMicrostx();
+```
+
 ## Supported V3 Methods
 
 ### Market
