@@ -68,6 +68,14 @@ export function validateStandardPrincipal(address: string): ValidationResult {
   return { valid: true };
 }
 
+export function validateMicroStxAmount(amount: number): ValidationResult {
+  if (!Number.isInteger(amount) || amount <= 0) {
+    return { valid: false, error: 'Amount must be a positive integer number of microSTX' };
+  }
+
+  return { valid: true };
+}
+
 export function validateBetAmount(amount: number, minBet = 10000): ValidationResult {
   if (!Number.isFinite(amount) || amount < minBet) {
     return { valid: false, error: `Bet amount must be at least ${minBet} microSTX` };
