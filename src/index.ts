@@ -1,6 +1,7 @@
 import MarketContractService from './MarketContractService';
 export * from './types';
 export * from './MarketContractService';
+export * from './errors/market-errors-50';
 export * from './utils/validation-50';
 export { MarketContractService };
 
