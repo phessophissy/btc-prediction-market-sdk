@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   MarketContractService,
   decodeMarketResponse,
@@ -22,6 +22,26 @@ describe("sdk V3 surface", () => {
     expect(service.claimWinnings).toBeUndefined();
     expect(service.createMultiMarket).toBeUndefined();
     expect(service.getMarketOdds).toBeUndefined();
+  });
+
+  it("rejects invalid market ids before getMarket performs a read", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.readContract = vi.fn();
+
+    await expect(service.getMarket(-1)).rejects.toThrow(
+      "Market ID must be a non-negative integer"
+    );
+    expect(service.readContract).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid market ids before getUserPosition performs a read", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.readContract = vi.fn();
+
+    await expect(service.getUserPosition(1.5, "SP2USER")).rejects.toThrow(
+      "Market ID must be a non-negative integer"
+    );
+    expect(service.readContract).not.toHaveBeenCalled();
   });
 });
 
