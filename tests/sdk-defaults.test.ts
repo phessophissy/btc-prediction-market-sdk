@@ -25,4 +25,10 @@ describe("sdk defaults", () => {
 
     expect(service.getContractName()).toBe("btc-prediction-market-v9");
   });
+
+  it("builds a contract identifier from address and name", () => {
+    const service = initializeMarketSDK("SP456", false, "btc-prediction-market-v9");
+
+    expect(service.getContractIdentifier()).toBe("SP456.btc-prediction-market-v9");
+  });
 });
