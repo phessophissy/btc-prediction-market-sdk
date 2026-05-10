@@ -20,6 +20,7 @@ import {
   validateDescription,
   validateMarketId,
   validateSettlementHeight,
+  validateStandardPrincipal,
   validateTitle,
 } from './utils/validation-50';
 import { Market, UserPosition } from './types';
@@ -308,6 +309,11 @@ export class MarketContractService {
       throw new Error(marketIdValidation.error);
     }
 
+    const userAddressValidation = validateStandardPrincipal(userAddress);
+    if (!userAddressValidation.valid) {
+      throw new Error(userAddressValidation.error);
+    }
+
     const response = await this.readContract('get-user-position', [
       { type: 'uint', value: marketId.toString() },
       { type: 'principal', value: userAddress },
@@ -352,6 +358,11 @@ export class MarketContractService {
   }
 
   async transferOwnership(newOwner: string, senderKey: string): Promise<string> {
+    const newOwnerValidation = validateStandardPrincipal(newOwner);
+    if (!newOwnerValidation.valid) {
+      throw new Error(newOwnerValidation.error);
+    }
+
     return this.callContract(
       'transfer-ownership',
       [{ type: 'principal', value: newOwner }],
