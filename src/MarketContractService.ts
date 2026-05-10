@@ -254,6 +254,10 @@ export class MarketContractService {
     );
   }
 
+  getContractAddress(): string {
+    return this.contractAddress;
+  }
+
   async getMarket(marketId: number): Promise<Market | null> {
     const response = await this.readContract('get-market', [
       { type: 'uint', value: marketId.toString() },
