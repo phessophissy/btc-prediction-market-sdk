@@ -266,6 +266,12 @@ export class MarketContractService {
     return `${this.contractAddress}.${this.contractName}`;
   }
 
+  getNetworkMode(): 'mainnet' | 'testnet' {
+    return this.transactionVersion === TransactionVersion.Mainnet
+      ? 'mainnet'
+      : 'testnet';
+  }
+
   async getMarket(marketId: number): Promise<Market | null> {
     const response = await this.readContract('get-market', [
       { type: 'uint', value: marketId.toString() },
