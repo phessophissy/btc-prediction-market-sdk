@@ -36,4 +36,10 @@ describe("sdk defaults", () => {
     expect(new MarketContractService("SP123", true).getNetworkMode()).toBe("mainnet");
     expect(new MarketContractService("ST123", false).getNetworkMode()).toBe("testnet");
   });
+
+  it("exposes the V3 binary market creation fee", () => {
+    const service = new MarketContractService("SP123", true);
+
+    expect(service.getMarketCreationFeeMicrostx()).toBe(100_000n);
+  });
 });
