@@ -31,4 +31,9 @@ describe("sdk defaults", () => {
 
     expect(service.getContractIdentifier()).toBe("SP456.btc-prediction-market-v9");
   });
+
+  it("reports the configured network mode", () => {
+    expect(new MarketContractService("SP123", true).getNetworkMode()).toBe("mainnet");
+    expect(new MarketContractService("ST123", false).getNetworkMode()).toBe("testnet");
+  });
 });
