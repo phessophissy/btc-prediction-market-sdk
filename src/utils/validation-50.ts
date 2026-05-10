@@ -50,6 +50,24 @@ export function validateMarketId(marketId: number): ValidationResult {
   return { valid: true };
 }
 
+export function validateStandardPrincipal(address: string): ValidationResult {
+  const trimmed = address.trim();
+
+  if (!trimmed) {
+    return { valid: false, error: 'Stacks address is required' };
+  }
+
+  if (trimmed.includes('.')) {
+    return { valid: false, error: 'Expected a standard Stacks address without a contract suffix' };
+  }
+
+  if (!/^S[PTMN][A-Z0-9]{8,}$/u.test(trimmed)) {
+    return { valid: false, error: 'Stacks address must be a valid standard principal string' };
+  }
+
+  return { valid: true };
+}
+
 export function validateBetAmount(amount: number, minBet = 10000): ValidationResult {
   if (!Number.isFinite(amount) || amount < minBet) {
     return { valid: false, error: `Bet amount must be at least ${minBet} microSTX` };
