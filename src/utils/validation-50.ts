@@ -9,7 +9,9 @@ export const MIN_DESCRIPTION_LENGTH = 5;
 export const MAX_DESCRIPTION_LENGTH = 1024;
 export const MIN_SETTLEMENT_OFFSET = 6;
 
-export function validateTitle(title: string): { valid: boolean; error?: string } {
+export type ValidationResult = { valid: true } | { valid: false; error: string };
+
+export function validateTitle(title: string): ValidationResult {
   if (!title || title.trim().length < MIN_TITLE_LENGTH) {
     return { valid: false, error: `Title must be at least ${MIN_TITLE_LENGTH} characters` };
   }
@@ -19,7 +21,7 @@ export function validateTitle(title: string): { valid: boolean; error?: string }
   return { valid: true };
 }
 
-export function validateDescription(desc: string): { valid: boolean; error?: string } {
+export function validateDescription(desc: string): ValidationResult {
   if (!desc || desc.trim().length < MIN_DESCRIPTION_LENGTH) {
     return { valid: false, error: `Description must be at least ${MIN_DESCRIPTION_LENGTH} characters` };
   }
@@ -32,7 +34,7 @@ export function validateDescription(desc: string): { valid: boolean; error?: str
 export function validateSettlementHeight(
   currentHeight: number,
   targetHeight: number
-): { valid: boolean; error?: string } {
+): ValidationResult {
   const offset = targetHeight - currentHeight;
   if (offset < MIN_SETTLEMENT_OFFSET) {
     return { valid: false, error: `Settlement must be at least ${MIN_SETTLEMENT_OFFSET} blocks in the future (got ${offset})` };
@@ -40,7 +42,7 @@ export function validateSettlementHeight(
   return { valid: true };
 }
 
-export function validateBetAmount(amount: number, minBet = 10000): { valid: boolean; error?: string } {
+export function validateBetAmount(amount: number, minBet = 10000): ValidationResult {
   if (!Number.isFinite(amount) || amount < minBet) {
     return { valid: false, error: `Bet amount must be at least ${minBet} microSTX` };
   }
