@@ -69,6 +69,15 @@ sdk.getMarketCreationFeeMicrostx();
 - V3 types from `src/types.ts`
 - Input validators from `src/utils/validation-50.ts`
 
+### Validation Helpers
+
+The SDK also exports lightweight guards you can use before collecting a wallet
+signature or building a UI form submission:
+
+- `validateMarketId(marketId)`
+- `validateStandardPrincipal(address)`
+- `validateMicroStxAmount(amount)`
+
 ## Development
 
 ```bash
