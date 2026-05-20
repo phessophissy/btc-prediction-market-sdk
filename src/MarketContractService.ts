@@ -16,7 +16,14 @@ import {
   trueCV,
   uintCV,
 } from '@stacks/transactions';
-import { validateDescription, validateSettlementHeight, validateTitle } from './utils/validation-50';
+import {
+  validateDescription,
+  validateMarketId,
+  validateMicroStxAmount,
+  validateSettlementHeight,
+  validateStandardPrincipal,
+  validateTitle,
+} from './utils/validation-50';
 import { Market, UserPosition } from './types';
 
 type ContractArg = {
@@ -254,7 +261,34 @@ export class MarketContractService {
     );
   }
 
+  getContractAddress(): string {
+    return this.contractAddress;
+  }
+
+  getContractName(): string {
+    return this.contractName;
+  }
+
+  getContractIdentifier(): string {
+    return `${this.contractAddress}.${this.contractName}`;
+  }
+
+  getNetworkMode(): 'mainnet' | 'testnet' {
+    return this.transactionVersion === TransactionVersion.Mainnet
+      ? 'mainnet'
+      : 'testnet';
+  }
+
+  getMarketCreationFeeMicrostx(): bigint {
+    return MARKET_CREATION_FEE_MICROSTX;
+  }
+
   async getMarket(marketId: number): Promise<Market | null> {
+    const marketIdValidation = validateMarketId(marketId);
+    if (!marketIdValidation.valid) {
+      throw new Error(marketIdValidation.error);
+    }
+
     const response = await this.readContract('get-market', [
       { type: 'uint', value: marketId.toString() },
     ]);
@@ -271,6 +305,16 @@ export class MarketContractService {
     marketId: number,
     userAddress: string
   ): Promise<UserPosition | null> {
+    const marketIdValidation = validateMarketId(marketId);
+    if (!marketIdValidation.valid) {
+      throw new Error(marketIdValidation.error);
+    }
+
+    const userAddressValidation = validateStandardPrincipal(userAddress);
+    if (!userAddressValidation.valid) {
+      throw new Error(userAddressValidation.error);
+    }
+
     const response = await this.readContract('get-user-position', [
       { type: 'uint', value: marketId.toString() },
       { type: 'principal', value: userAddress },
@@ -315,6 +359,11 @@ export class MarketContractService {
   }
 
   async transferOwnership(newOwner: string, senderKey: string): Promise<string> {
+    const newOwnerValidation = validateStandardPrincipal(newOwner);
+    if (!newOwnerValidation.valid) {
+      throw new Error(newOwnerValidation.error);
+    }
+
     return this.callContract(
       'transfer-ownership',
       [{ type: 'principal', value: newOwner }],
@@ -339,6 +388,16 @@ export class MarketContractService {
     recipient: string,
     senderKey: string
   ): Promise<string> {
+    const amountValidation = validateMicroStxAmount(amountMicroStx);
+    if (!amountValidation.valid) {
+      throw new Error(amountValidation.error);
+    }
+
+    const recipientValidation = validateStandardPrincipal(recipient);
+    if (!recipientValidation.valid) {
+      throw new Error(recipientValidation.error);
+    }
+
     return this.callContract(
       'withdraw-fees',
       [
@@ -358,6 +417,16 @@ export class MarketContractService {
     recipient: string,
     senderKey: string
   ): Promise<string> {
+    const amountValidation = validateMicroStxAmount(amountMicroStx);
+    if (!amountValidation.valid) {
+      throw new Error(amountValidation.error);
+    }
+
+    const recipientValidation = validateStandardPrincipal(recipient);
+    if (!recipientValidation.valid) {
+      throw new Error(recipientValidation.error);
+    }
+
     return this.callContract(
       'emergency-withdraw',
       [

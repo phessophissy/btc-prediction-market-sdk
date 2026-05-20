@@ -25,6 +25,16 @@ const marketCount = await sdk.getMarketCount();
 const marketZero = await sdk.getMarket(0);
 ```
 
+## Instance Metadata Helpers
+
+```ts
+sdk.getContractAddress();
+sdk.getContractName();
+sdk.getContractIdentifier();
+sdk.getNetworkMode();
+sdk.getMarketCreationFeeMicrostx();
+```
+
 ## Supported V3 Methods
 
 ### Market
@@ -58,6 +68,15 @@ const marketZero = await sdk.getMarket(0);
 - `initializeMarketSDK`
 - V3 types from `src/types.ts`
 - Input validators from `src/utils/validation-50.ts`
+
+### Validation Helpers
+
+The SDK also exports lightweight guards you can use before collecting a wallet
+signature or building a UI form submission:
+
+- `validateMarketId(marketId)`
+- `validateStandardPrincipal(address)`
+- `validateMicroStxAmount(amount)`
 
 ## Development
 

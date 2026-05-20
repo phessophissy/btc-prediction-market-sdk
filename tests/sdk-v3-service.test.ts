@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   MarketContractService,
   decodeMarketResponse,
@@ -22,6 +22,66 @@ describe("sdk V3 surface", () => {
     expect(service.claimWinnings).toBeUndefined();
     expect(service.createMultiMarket).toBeUndefined();
     expect(service.getMarketOdds).toBeUndefined();
+  });
+
+  it("rejects invalid market ids before getMarket performs a read", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.readContract = vi.fn();
+
+    await expect(service.getMarket(-1)).rejects.toThrow(
+      "Market ID must be a non-negative integer"
+    );
+    expect(service.readContract).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid market ids before getUserPosition performs a read", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.readContract = vi.fn();
+
+    await expect(service.getUserPosition(1.5, "SP2USER")).rejects.toThrow(
+      "Market ID must be a non-negative integer"
+    );
+    expect(service.readContract).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid standard principals before getUserPosition performs a read", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.readContract = vi.fn();
+
+    await expect(service.getUserPosition(1, "SP123.contract")).rejects.toThrow(
+      "Expected a standard Stacks address without a contract suffix"
+    );
+    expect(service.readContract).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid ownership recipients before transferOwnership builds a tx", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.callContract = vi.fn();
+
+    await expect(service.transferOwnership(" ", "sender-key")).rejects.toThrow(
+      "Stacks address is required"
+    );
+    expect(service.callContract).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid withdrawal amounts before withdrawFees builds a tx", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.callContract = vi.fn();
+
+    await expect(service.withdrawFees(0, "SP2C2Q4JY1Q9W2D5J1X7A7M6D0A8TR3M6L5Z9P4M1", "sender-key")).rejects.toThrow(
+      "Amount must be a positive integer number of microSTX"
+    );
+    expect(service.callContract).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid withdrawal recipients before emergencyWithdraw builds a tx", async () => {
+    const service = new MarketContractService("SP123", true) as any;
+    service.callContract = vi.fn();
+
+    await expect(service.emergencyWithdraw(1000, "not-an-address", "sender-key")).rejects.toThrow(
+      "Stacks address must be a valid standard principal string"
+    );
+    expect(service.callContract).not.toHaveBeenCalled();
   });
 });
 
